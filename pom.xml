@@ -11,6 +11,21 @@
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
+  <developers>
+    <developer>
+      <id>monaenzi</id>
+      <name>Ramona Enzi</name>
+      <email>ramona.enzi@edu.fh-joanneum.at</email>
+      <url>https://github.com/monaenzi</url>
+      <organization>FH JOANNEUM GmbH</organization>
+      <organizationUrl>https://www.fh-joanneum.at/iit</organizationUrl>
+      <roles>
+      <role>Student</role>
+      </roles>
+      <timezone>Europe/Vienna</timezone>
+    </developer>
+  </developers>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>17</maven.compiler.release>
@@ -25,6 +40,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-bom</artifactId>
+        <version>2.24.3</version>
+        <scope>import</scope>
+        <type>pom</type>
+    </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -39,6 +61,20 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency> 
+      <groupId>org.junit.jupiter</groupId> 
+      <artifactId>junit-jupiter-engine</artifactId> 
+      <scope>test</scope> 
+    </dependency> 
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 
@@ -83,8 +119,72 @@
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.6.1</version>
+        </plugin> 
+        <plugin> 
+          <groupId>org.codehaus.mojo</groupId> 
+          <artifactId>exec-maven-plugin</artifactId> 
+          <version>3.0.0</version> 
+          <configuration> 
+            <mainClass>at.fhj.msd.Main</mainClass>  
+          </configuration> 
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.12</version>
+          <executions>
+            <execution>
+              <id>prepare-agent</id>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>report</id>
+              <phase>test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
   </build>
+
+  <reporting>
+    <plugins>
+      <!-- maven site for documentation -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.5.0</version>
+      </plugin>
+
+      <!-- Java Doc within Maven Site Documentation -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.7.0</version>
+        <configuration>
+          <!-- Disable JavaDoc warnings -->
+          <additionalJOption>-Xdoclint:none</additionalJOption>
+        </configuration>
+      </plugin>
+
+      <!-- Test Coverage from JaCoCo Plugin integration in Maven Site Documentation -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.12</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
